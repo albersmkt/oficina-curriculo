@@ -1,13 +1,12 @@
-import {timingSafeEqual} from 'node:crypto';
+import {authenticated, sameOrigin} from '../../../lib/session.mjs';
 import {validate, instructions} from '../../../lib/policy.mjs';
 export const runtime = 'nodejs';
 const json = (body, status=200) => Response.json(body, {status, headers:{'Cache-Control':'no-store'}});
 export async function POST(req) {
  const secret = process.env.KIOSK_ACCESS_CODE;
  if (!secret || !process.env.OPENAI_API_KEY) return json({error:'A IA ainda não foi configurada. Você pode continuar preenchendo manualmente.'},503);
- const supplied = req.headers.get('x-kiosk-code') || '';
- const a = Buffer.from(secret), b = Buffer.from(supplied);
- if (a.length !== b.length || !timingSafeEqual(a,b)) return json({error:'Código de acesso inválido.'},401);
+ if (!sameOrigin(req)) return json({error:'Origem inválida.'},403);
+ if (!authenticated(req)) return json({error:'Entre em Meu acesso à IA para continuar. Seu texto foi preservado.'},401);
  let input;
  try { const raw = await req.text(); if (raw.length > 16000) return json({error:'Texto muito longo.'},413); input = validate(JSON.parse(raw)); }
  catch { return json({error:'Informe um texto de até 3.000 caracteres e um estilo válido.'},400); }
