@@ -17,3 +17,4 @@
  .experience{padding:3mm 0;border:0}
  .card:not(:has(label:not(.print-empty))),.experience:not(:has(label:not(.print-empty))){display:none!important}
 }
+.export-actions{display:flex;flex-direction:column;gap:10px;min-width:220px}.export-actions small{font-size:12px;line-height:1.5;color:var(--muted)}.whatsapp-link{display:block;text-align:center;text-decoration:none;background:var(--green);color:white;border-radius:7px;padding:12px 18px;font-size:13px;font-weight:600}.whatsapp-link:hover{filter:brightness(.93)}
